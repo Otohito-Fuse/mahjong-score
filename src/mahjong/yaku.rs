@@ -346,6 +346,266 @@ fn is_ikkitsuukan(ctx: &YakuContext) -> bool {
     }
 }
 
+// 三色同順
+fn is_sanshokudoujun(ctx: &YakuContext) -> bool {
+    match ctx.form {
+        YakuForm::FiveBlock(b) => {
+            if b.counts.shuntsu_total < 3 {
+                return false;
+            }
+
+            let mut shuntsu_cnt = [[false; 7]; 3];
+            for Block(b, t) in &b.blocks {
+                match b {
+                    BlockType::Shuntsu | BlockType::Chi => {
+                        if t.is_suited() {
+                            shuntsu_cnt[t.0][t.1 - 1] = true;
+                        }
+                    }
+                    _ => {}
+                }
+            }
+
+            for i in 0..7 {
+                if shuntsu_cnt[0][i] && shuntsu_cnt[1][i] && shuntsu_cnt[2][i] {
+                    return true;
+                }
+            }
+            false
+        }
+        _ => false,
+    }
+}
+
+// 三色同刻
+fn is_sanshokudoukou(ctx: &YakuContext) -> bool {
+    match ctx.form {
+        YakuForm::FiveBlock(b) => {
+            if b.counts.shuntsu_total < 3 {
+                return false;
+            }
+
+            let mut koutsu_cnt = [[false; 9]; 3];
+            for Block(b, t) in &b.blocks {
+                match b {
+                    BlockType::Koutsu | BlockType::Pon | BlockType::Minkan | BlockType::Ankan => {
+                        if t.is_suited() {
+                            koutsu_cnt[t.0][t.1 - 1] = true;
+                        }
+                    }
+                    _ => {}
+                }
+            }
+
+            for i in 0..9 {
+                if koutsu_cnt[0][i] && koutsu_cnt[1][i] && koutsu_cnt[2][i] {
+                    return true;
+                }
+            }
+            false
+        }
+        _ => false,
+    }
+}
+
+// 混全帯幺九
+fn is_chanta(ctx: &YakuContext) -> bool {
+    match ctx.form {
+        YakuForm::FiveBlock(b) => {
+            // 順子がない場合は混老頭になるため false
+            if b.counts.shuntsu_total == 0 {
+                return false;
+            }
+
+            let mut has_honor = false;
+            for Block(b, t) in &b.blocks {
+                match b {
+                    BlockType::Shuntsu | BlockType::Chi => {
+                        if t.is_suited() && t.1 >= 2 && t.1 <= 6 {
+                            return false;
+                        }
+                    }
+                    _ => {
+                        if t.is_simple() {
+                            return false;
+                        }
+                        if t.is_honor() {
+                            has_honor = true;
+                        }
+                    }
+                }
+            }
+            // 純全帯幺九のときには false とするための措置
+            has_honor
+        }
+        // 混老頭になるため七対子の場合も false
+        _ => false,
+    }
+}
+
+// 純全帯幺九
+fn is_junchan(ctx: &YakuContext) -> bool {
+    match ctx.form {
+        YakuForm::FiveBlock(b) => {
+            // 順子がない場合は清老頭になるため false
+            if b.counts.shuntsu_total == 0 {
+                return false;
+            }
+
+            for Block(b, t) in &b.blocks {
+                match b {
+                    BlockType::Shuntsu | BlockType::Chi => {
+                        if !(t.is_suited() && (t.1 == 1 || t.1 == 7)) {
+                            return false;
+                        }
+                    }
+                    _ => {
+                        if !t.is_terminal() {
+                            return false;
+                        }
+                    }
+                }
+            }
+            true
+        }
+        // 清老頭になるため七対子の場合も false
+        _ => false,
+    }
+}
+
+// 混老頭
+fn is_honroutou(ctx: &YakuContext) -> bool {
+    match ctx.form {
+        YakuForm::FiveBlock(b) => {
+            let mut has_honor = false;
+            let mut has_terminal = false;
+            for Block(b, t) in &b.blocks {
+                match b {
+                    BlockType::Shuntsu | BlockType::Chi => {
+                        return false;
+                    }
+                    _ => {
+                        if t.is_simple() {
+                            return false;
+                        } else if t.is_terminal() {
+                            has_terminal = true;
+                        } else if t.is_honor() {
+                            has_honor = true;
+                        }
+                    }
+                }
+            }
+            // 字牌か一九牌どちらかの場合は字一色か清老頭になるため false
+            has_honor && has_terminal
+        }
+        YakuForm::SevenPair(s) => {
+            let mut has_honor = false;
+            let mut has_terminal = false;
+            for tile in &s.pairs {
+                if tile.is_simple() {
+                    return false;
+                } else if tile.is_terminal() {
+                    has_terminal = true;
+                } else if tile.is_honor() {
+                    has_honor = true;
+                }
+            }
+            // 字牌か一九牌どちらかの場合は字一色か清老頭になるため false
+            has_honor && has_terminal
+        }
+        _ => false,
+    }
+}
+
+// 清老頭
+fn is_chinroutou(ctx: &YakuContext) -> bool {
+    match ctx.form {
+        YakuForm::FiveBlock(b) => {
+            for Block(b, t) in &b.blocks {
+                match b {
+                    BlockType::Shuntsu | BlockType::Chi => {
+                        return false;
+                    }
+                    _ => {
+                        if !t.is_terminal() {
+                            return false;
+                        }
+                    }
+                }
+            }
+            true
+        }
+        YakuForm::SevenPair(s) => {
+            for tile in &s.pairs {
+                if !tile.is_terminal() {
+                    return false;
+                }
+            }
+            true
+        }
+        _ => false,
+    }
+}
+
+// 対々和
+fn is_toitoihou(ctx: &YakuContext) -> bool {
+    match ctx.form {
+        YakuForm::FiveBlock(b) => b.counts.koutsu_total == 4,
+        _ => false,
+    }
+}
+
+// 三暗刻
+fn is_sanankou(ctx: &YakuContext) -> bool {}
+
+// 四暗刻
+fn is_suuankou(ctx: &YakuContext) -> bool {}
+
+// 四暗刻単騎
+fn is_suuankoutanki(ctx: &YakuContext) -> bool {}
+
+// 三槓子
+fn is_sankantsu(ctx: &YakuContext) -> bool {}
+
+// 四槓子
+fn is_suukantsu(ctx: &YakuContext) -> bool {}
+
+// 混一色
+fn is_honitsu(ctx: &YakuContext) -> bool {}
+
+// 清一色
+fn is_chinitsu(ctx: &YakuContext) -> bool {}
+
+// 小三元
+fn is_shousangen(ctx: &YakuContext) -> bool {}
+
+// 大三元
+fn is_daisangen(ctx: &YakuContext) -> bool {}
+
+// 小四喜
+fn is_shousuushii(ctx: &YakuContext) -> bool {}
+
+// 大四喜
+fn is_daisuushii(ctx: &YakuContext) -> bool {}
+
+// 緑一色
+fn is_ryuuiisou(ctx: &YakuContext) -> bool {}
+
+// 字一色
+fn is_tsuuiisou(ctx: &YakuContext) -> bool {}
+
+// 九蓮宝燈
+fn is_chuurenpoutou(ctx: &YakuContext) -> bool {}
+
+// 純正九蓮宝燈
+fn is_junseichuurenpoutou(ctx: &YakuContext) -> bool {}
+
+// 国士無双
+fn is_kokushimusou(ctx: &YakuContext) -> bool {}
+
+// 国士無双十三面待ち
+fn is_kokushimusoujuusanmenmachi(ctx: &YakuContext) -> bool {}
+
 // 七対子
 fn is_sevenpair(ctx: &YakuContext) -> bool {
     match ctx.form {
