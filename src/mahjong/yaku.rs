@@ -207,7 +207,7 @@ struct Counts {
 
 #[derive(Debug)]
 pub struct YakuContext {
-    hand: TileTable,       // 元々の手牌 (鳴き、アガり牌は含まない)
+    hand: TileTable,       // 元々の手牌 (鳴きは含まない・アガり牌は含む)
     form: YakuForm,        // 役の形
     agari_tile: Tile,      // アガり牌
     tsumo: bool,           // ツモ和了
@@ -1083,14 +1083,14 @@ fn is_tsuuiisou(ctx: &YakuContext) -> bool {
 fn is_chuurenpoutou(ctx: &YakuContext) -> bool {
     let at = &ctx.agari_tile;
     let cnt = ctx.hand[at.0][at.1];
-    is_chuurenpoutou_cmn(ctx) && (cnt == 0 || cnt == 2)
+    is_chuurenpoutou_cmn(ctx) && (cnt == 1 || cnt == 3)
 }
 
 // 純正九蓮宝燈
 fn is_junseichuurenpoutou(ctx: &YakuContext) -> bool {
     let at = &ctx.agari_tile;
     let cnt = ctx.hand[at.0][at.1];
-    is_chuurenpoutou_cmn(ctx) && (cnt == 1 || cnt == 3)
+    is_chuurenpoutou_cmn(ctx) && (cnt == 2 || cnt == 4)
 }
 
 // 九蓮宝燈 共通
@@ -1112,9 +1112,7 @@ fn is_chuurenpoutou_cmn(ctx: &YakuContext) -> bool {
                 return false;
             };
 
-            let mut h = ctx.hand;
-            let at = &ctx.agari_tile;
-            h[at.0][at.1] += 1;
+            let h = ctx.hand;
             if h[tile_type][1] < 3 || h[tile_type][9] < 3 {
                 return false;
             }
@@ -1135,7 +1133,7 @@ fn is_kokushimusou(ctx: &YakuContext) -> bool {
         YakuForm::KokushiMusou => {
             let at = &ctx.agari_tile;
             let cnt = ctx.hand[at.0][at.1];
-            cnt == 0
+            cnt == 1
         }
         _ => false,
     }
@@ -1147,7 +1145,7 @@ fn is_kokushimusoujuusanmenmachi(ctx: &YakuContext) -> bool {
         YakuForm::KokushiMusou => {
             let at = &ctx.agari_tile;
             let cnt = ctx.hand[at.0][at.1];
-            cnt == 1
+            cnt == 2
         }
         _ => false,
     }

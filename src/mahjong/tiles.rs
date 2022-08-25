@@ -167,3 +167,140 @@ impl Ord for TileWithDora {
         self.partial_cmp(other).unwrap()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn is_suited_works_01() {
+        let tile = Tile(TM, 1);
+        assert!(tile.is_suited());
+    }
+
+    #[test]
+    fn is_suited_works_02() {
+        let tile = Tile(TP, 9);
+        assert!(tile.is_suited());
+    }
+
+    #[test]
+    fn is_suited_works_03() {
+        let tile = Tile(TS, 5);
+        assert!(tile.is_suited());
+    }
+
+    #[test]
+    fn is_suited_works_04() {
+        let tile = Tile(TZ, 5);
+        assert!(!tile.is_suited());
+    }
+
+    #[test]
+    fn is_honor_works_01() {
+        let tile = Tile(TZ, WEA);
+        assert!(tile.is_honor());
+    }
+
+    #[test]
+    fn is_honor_works_02() {
+        let tile = Tile(TZ, WSO);
+        assert!(tile.is_honor());
+    }
+
+    #[test]
+    fn is_honor_works_03() {
+        let tile = Tile(TZ, WWE);
+        assert!(tile.is_honor());
+    }
+
+    #[test]
+    fn is_honor_works_04() {
+        let tile = Tile(TZ, WNO);
+        assert!(tile.is_honor());
+    }
+
+    #[test]
+    fn is_honor_works_05() {
+        let tile = Tile(TZ, DWH);
+        assert!(tile.is_honor());
+    }
+
+    #[test]
+    fn is_honor_works_06() {
+        let tile = Tile(TZ, DGR);
+        assert!(tile.is_honor());
+    }
+
+    #[test]
+    fn is_honor_works_07() {
+        let tile = Tile(TZ, DRE);
+        assert!(tile.is_honor());
+    }
+
+    #[test]
+    fn is_honor_works_08() {
+        let tile = Tile(TM, 1);
+        assert!(!tile.is_honor());
+    }
+
+    #[test]
+    fn is_honor_works_09() {
+        let tile = Tile(TP, 3);
+        assert!(!tile.is_honor());
+    }
+
+    #[test]
+    fn is_honor_works_10() {
+        let tile = Tile(TS, 5);
+        assert!(!tile.is_honor());
+    }
+
+    #[test]
+    fn is_terminal_works_01() {
+        let tile = Tile(TM, 1);
+        assert!(tile.is_terminal());
+    }
+
+    #[test]
+    fn is_terminal_works_02() {
+        let tile = Tile(TM, 9);
+        assert!(tile.is_terminal());
+    }
+
+    #[test]
+    fn is_terminal_works_03() {
+        let tile = Tile(TP, 1);
+        assert!(tile.is_terminal());
+    }
+
+    #[test]
+    fn is_terminal_works_04() {
+        let tile = Tile(TP, 9);
+        assert!(tile.is_terminal());
+    }
+
+    #[test]
+    fn is_terminal_works_05() {
+        let tile = Tile(TS, 1);
+        assert!(tile.is_terminal());
+    }
+
+    #[test]
+    fn is_terminal_works_06() {
+        let tile = Tile(TS, 9);
+        assert!(tile.is_terminal());
+    }
+
+    #[test]
+    fn is_terminal_works_07() {
+        let tile = Tile(TM, 2);
+        assert!(!tile.is_terminal());
+    }
+
+    #[test]
+    fn is_terminal_works_08() {
+        let tile = Tile(TM, 8);
+        assert!(!tile.is_terminal());
+    }
+}
