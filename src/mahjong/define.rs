@@ -11,7 +11,7 @@ pub type Point = i32; // 打点
 // Number
 pub const SEAT: usize = 4; // 座席の数
 pub const TYPE: usize = 5; // 牌の種別部分の数 (萬子,筒子,索子,字牌,花牌)
-pub const TNUM: usize = 9; // 牌の数字部分の数 (1~9)
+pub const TNUM: usize = 10; // 牌の数字部分の数 (1~9、0は未使用)
 pub const TILE: usize = 4; // 同種の牌の数
 
 // Type Index

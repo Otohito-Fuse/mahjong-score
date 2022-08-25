@@ -1,6 +1,6 @@
 use super::*;
 
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq, Default)]
 pub struct Tile(pub Type, pub Tnum, pub Dora); // (type index, number index, dora bonus)
 
 impl Tile {
@@ -54,7 +54,7 @@ impl Tile {
 
     // 三元牌
     #[inline]
-    pub fn is_doragon(&self) -> bool {
+    pub fn is_dragon(&self) -> bool {
         self.0 == TZ && self.1 >= DWH && self.1 <= DRE
     }
 

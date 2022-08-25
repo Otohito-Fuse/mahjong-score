@@ -5,13 +5,16 @@ pub type TileTable = [TileRow; TYPE]; // 各牌の枚数の二次元配列
 
 #[derive(Debug)]
 pub struct HandContext {
-    hand: TileTable,       // 元々の手牌(鳴きは含まない)
+    hand: TileTable,       // 元々の手牌 (鳴き、アガり牌は含まない)
     fuuro: Vec<Fuuro>,     // 鳴いている面子
     nuki_dora: Vec<Tile>,  // 抜きドラ
     agari_tile: Tile,      // アガり牌
     tsumo: bool,           // ツモ和了
     bakaze: Tnum,          // 場風 (東: 1, 南: 2, 西: 3, 北: 4)
     jikaze: Tnum,          // 自風 (同上)
+    aka_dora: Vec<Tile>,   // 赤ドラ
+    dora: Vec<Tile>,       // ドラ
+    ura_dora: Vec<Tile>,   // 裏ドラ
     yaku_flags: YakuFlags, // 組み合わせ以外による役 外部から設定を行う
 }
 
