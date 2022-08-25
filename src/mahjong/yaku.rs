@@ -48,7 +48,7 @@ impl FiveBlock {
 fn blocks_to_counts(blocks: &Vec<Block>) -> Counts {
     let mut cnt = Counts::default();
 
-    for Block(bt, t) in blocks {
+    for Block(bt, _) in blocks {
         match bt {
             BlockType::Pair => cnt.pair += 1,
             BlockType::Shuntsu => cnt.shuntsu += 1,
@@ -131,6 +131,22 @@ fn blocks_to_iipeikou_count(blocks: &Vec<Block>) -> usize {
         }
     }
     n
+}
+
+fn check_yakuhai(blocks: &Vec<Block>) -> TileRow {
+    let mut tr = TileRow::default();
+    for Block(b, t) in blocks {
+        match b {
+            BlockType::Koutsu | BlockType::Pon | BlockType::Minkan | BlockType::Ankan => {
+                if t.is_honor() {
+                    tr[t.1] += 1;
+                }
+            }
+            _ => {}
+        }
+    }
+
+    tr
 }
 
 #[derive(Debug)]
@@ -397,11 +413,11 @@ const YAKU_LIST: &[Yaku] = &[
     yaku!(44, "四槓子", is_suukantsu, 13, 13),
     yaku!(27, "混一色", is_honitsu, 3, 2),
     yaku!(29, "清一色", is_chinitsu, 6, 5),
-    // yaku!(23, "小三元", is_shousangen, 2, 2),
-    // yaku!(37, "大三元", is_daisangen, 13, 13),
-    // yaku!(43, "小四喜", is_shousuushii, 13, 13),
-    // yaku!(50, "大四喜", is_daisuushii, 14, 14),
-    // yaku!(40, "緑一色", is_ryuuiisou, 13, 13),
+    yaku!(23, "小三元", is_shousangen, 2, 2),
+    yaku!(37, "大三元", is_daisangen, 13, 13),
+    yaku!(43, "小四喜", is_shousuushii, 13, 13),
+    yaku!(50, "大四喜", is_daisuushii, 14, 14),
+    yaku!(40, "緑一色", is_ryuuiisou, 13, 13),
     yaku!(39, "字一色", is_tsuuiisou, 13, 13),
     yaku!(45, "九蓮宝燈", is_chuurenpoutou, 13, 0),
     yaku!(47, "純正九蓮宝燈", is_junseichuurenpoutou, 14, 0),
@@ -929,20 +945,116 @@ fn is_chinitsu(ctx: &YakuContext) -> bool {
     }
 }
 
-// // 小三元
-// fn is_shousangen(ctx: &YakuContext) -> bool {}
+// 小三元
+fn is_shousangen(ctx: &YakuContext) -> bool {
+    match &ctx.form {
+        YakuForm::FiveBlock(b) => has_all_dragons(&b) && b.pair_tile.is_dragon(),
+        _ => false,
+    }
+}
 
-// // 大三元
-// fn is_daisangen(ctx: &YakuContext) -> bool {}
+// 大三元
+fn is_daisangen(ctx: &YakuContext) -> bool {
+    match &ctx.form {
+        YakuForm::FiveBlock(b) => has_all_dragons(&b) && !b.pair_tile.is_dragon(),
+        _ => false,
+    }
+}
 
-// // 小四喜
-// fn is_shousuushii(ctx: &YakuContext) -> bool {}
+// 三元牌の面子or対子を全て持っているか
+fn has_all_dragons(b: &FiveBlock) -> bool {
+    let mut dragon_cnt = [false; 3];
+    for Block(_, t) in &b.blocks {
+        if t.0 == TZ {
+            match t.1 {
+                DWH => {
+                    dragon_cnt[0] = true;
+                }
+                DGR => {
+                    dragon_cnt[1] = true;
+                }
+                DRE => {
+                    dragon_cnt[2] = true;
+                }
+                _ => {}
+            }
+        }
+    }
+    dragon_cnt[0] && dragon_cnt[1] && dragon_cnt[2]
+}
 
-// // 大四喜
-// fn is_daisuushii(ctx: &YakuContext) -> bool {}
+// 小四喜
+fn is_shousuushii(ctx: &YakuContext) -> bool {
+    match &ctx.form {
+        YakuForm::FiveBlock(b) => has_all_winds(&b) && b.pair_tile.is_wind(),
+        _ => false,
+    }
+}
 
-// // 緑一色
-// fn is_ryuuiisou(ctx: &YakuContext) -> bool {}
+// 大四喜
+fn is_daisuushii(ctx: &YakuContext) -> bool {
+    match &ctx.form {
+        YakuForm::FiveBlock(b) => has_all_winds(&b) && !b.pair_tile.is_wind(),
+        _ => false,
+    }
+}
+
+// 風牌の面子or対子を全て持っているか
+fn has_all_winds(b: &FiveBlock) -> bool {
+    let mut wind_cnt = [false; 4];
+    for Block(_, t) in &b.blocks {
+        if t.0 == TZ {
+            match t.1 {
+                WEA => {
+                    wind_cnt[0] = true;
+                }
+                WSO => {
+                    wind_cnt[1] = true;
+                }
+                WWE => {
+                    wind_cnt[2] = true;
+                }
+                WNO => {
+                    wind_cnt[3] = true;
+                }
+                _ => {}
+            }
+        }
+    }
+    wind_cnt[0] && wind_cnt[1] && wind_cnt[2] && wind_cnt[3]
+}
+
+// 緑一色
+fn is_ryuuiisou(ctx: &YakuContext) -> bool {
+    match &ctx.form {
+        YakuForm::FiveBlock(b) => {
+            for Block(bt, t) in &b.blocks {
+                match bt {
+                    BlockType::Chi | BlockType::Shuntsu => {
+                        if t.1 != 2 {
+                            return false;
+                        }
+                    }
+                    _ => {
+                        if !t.is_green() {
+                            return false;
+                        }
+                    }
+                }
+            }
+            true
+        }
+        YakuForm::SevenPair(s) => {
+            for t in &s.pairs {
+                if !t.is_green() {
+                    return false;
+                }
+            }
+            true
+        }
+        _ => false,
+    }
+}
 
 // 字一色
 fn is_tsuuiisou(ctx: &YakuContext) -> bool {
@@ -979,6 +1091,42 @@ fn is_junseichuurenpoutou(ctx: &YakuContext) -> bool {
     let at = &ctx.agari_tile;
     let cnt = ctx.hand[at.0][at.1];
     is_chuurenpoutou_cmn(ctx) && (cnt == 1 || cnt == 3)
+}
+
+// 九蓮宝燈 共通
+fn is_chuurenpoutou_cmn(ctx: &YakuContext) -> bool {
+    match &ctx.form {
+        YakuForm::FiveBlock(b) => {
+            if b.is_open {
+                return false;
+            }
+
+            let tile_type_cnts = &b.tile_type_cnts;
+            let tile_type = if tile_type_cnts[TM] == 14 {
+                TM
+            } else if tile_type_cnts[TP] == 14 {
+                TP
+            } else if tile_type_cnts[TS] == 14 {
+                TS
+            } else {
+                return false;
+            };
+
+            let mut h = ctx.hand;
+            let at = &ctx.agari_tile;
+            h[at.0][at.1] += 1;
+            if h[tile_type][1] < 3 || h[tile_type][9] < 3 {
+                return false;
+            }
+            for n in 2..=8 {
+                if h[tile_type][n] == 0 {
+                    return false;
+                }
+            }
+            true
+        }
+        _ => false,
+    }
 }
 
 // 国士無双
@@ -1061,40 +1209,4 @@ fn is_tenhou(ctx: &YakuContext) -> bool {
 // 地和
 fn is_tiihou(ctx: &YakuContext) -> bool {
     ctx.yaku_flags.tiihou
-}
-
-// 九蓮宝燈 共通
-fn is_chuurenpoutou_cmn(ctx: &YakuContext) -> bool {
-    match &ctx.form {
-        YakuForm::FiveBlock(b) => {
-            if b.is_open {
-                return false;
-            }
-
-            let tile_type_cnts = &b.tile_type_cnts;
-            let tile_type = if tile_type_cnts[TM] == 14 {
-                TM
-            } else if tile_type_cnts[TP] == 14 {
-                TP
-            } else if tile_type_cnts[TS] == 14 {
-                TS
-            } else {
-                return false;
-            };
-
-            let mut h = ctx.hand;
-            let at = &ctx.agari_tile;
-            h[at.0][at.1] += 1;
-            if h[tile_type][1] < 3 || h[tile_type][9] < 3 {
-                return false;
-            }
-            for n in 2..=8 {
-                if h[tile_type][n] == 0 {
-                    return false;
-                }
-            }
-            true
-        }
-        _ => false,
-    }
 }
