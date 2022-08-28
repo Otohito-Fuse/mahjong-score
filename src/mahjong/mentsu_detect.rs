@@ -130,7 +130,7 @@ pub fn get_koutsu(table: &NumCntTable) -> Option<Vec<Vec<Mentsu>>> {
         return Some(output);
     }
 
-    Some(Vec::new())
+    Some(vec![Vec::new()])
 }
 
 #[cfg(test)]

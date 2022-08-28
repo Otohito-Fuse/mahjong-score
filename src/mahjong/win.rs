@@ -101,7 +101,7 @@ pub fn detect_winning(ctx: &HandContext) -> Vec<YakuContext> {
 
     // 4面子1雀頭の判定
     // 手牌の全種類について雀頭になりうるかどうか試す
-    for i in 0..3 {
+    for i in 0..4 {
         for j in 1..=9 {
             if hand[i][j] < 2 {
                 continue;
@@ -122,6 +122,9 @@ pub fn detect_winning(ctx: &HandContext) -> Vec<YakuContext> {
                                     for souzu_mentsu_vec in &souzu_mentsu_vec_vec {
                                         for zihai_koutsu_vec in &zihai_koutsu_vec_vec {
                                             let mut blocks = fuuro_blocks.clone();
+
+                                            // 雀頭
+                                            blocks.push(Block(BlockType::Pair, Tile(i, j)));
 
                                             for manzu_mentsu in manzu_mentsu_vec {
                                                 match manzu_mentsu.mentsu_type {
@@ -208,38 +211,38 @@ pub fn detect_winning(ctx: &HandContext) -> Vec<YakuContext> {
     output
 }
 
-// #[cfg(test)]
-// mod test {
-//     use super::*;
+#[cfg(test)]
+mod test {
+    use super::*;
 
-//     #[test]
-//     fn test_detect_winning_01() {
-//         let ctx: HandContext = HandContext::new(
-//             vec![
-//                 TileWithDora(Tile(TM, 1), 0),
-//                 TileWithDora(Tile(TM, 2), 0),
-//                 TileWithDora(Tile(TM, 3), 0),
-//                 TileWithDora(Tile(TM, 5), 0),
-//                 TileWithDora(Tile(TM, 6), 0),
-//                 TileWithDora(Tile(TM, 7), 0),
-//                 TileWithDora(Tile(TM, 5), 0),
-//                 TileWithDora(Tile(TM, 6), 0),
-//                 TileWithDora(Tile(TM, 7), 0),
-//                 TileWithDora(Tile(TS, 6), 0),
-//                 TileWithDora(Tile(TS, 7), 0),
-//                 TileWithDora(Tile(TZ, WWE), 0),
-//                 TileWithDora(Tile(TZ, WWE), 0),
-//             ],
-//             vec![],
-//             TileWithDora(Tile(TS, 8), 0),
-//             false,
-//             WEA,
-//             WNO,
-//             vec![],
-//             vec![],
-//             vec![],
-//             YakuFlags::default(),
-//         );
-//         assert_eq!(detect_winning(&ctx).len(), 1);
-//     }
-// }
+    #[test]
+    fn detect_winning_works_01() {
+        let ctx: HandContext = HandContext::new(
+            vec![
+                TileWithDora(Tile(TM, 1), 0),
+                TileWithDora(Tile(TM, 2), 0),
+                TileWithDora(Tile(TM, 3), 0),
+                TileWithDora(Tile(TM, 5), 0),
+                TileWithDora(Tile(TM, 6), 0),
+                TileWithDora(Tile(TM, 7), 0),
+                TileWithDora(Tile(TP, 6), 0),
+                TileWithDora(Tile(TP, 7), 0),
+                TileWithDora(Tile(TP, 8), 0),
+                TileWithDora(Tile(TS, 6), 0),
+                TileWithDora(Tile(TS, 7), 0),
+                TileWithDora(Tile(TZ, WWE), 0),
+                TileWithDora(Tile(TZ, WWE), 0),
+            ],
+            vec![],
+            TileWithDora(Tile(TS, 8), 0),
+            false,
+            WEA,
+            WNO,
+            vec![],
+            vec![],
+            vec![],
+            YakuFlags::default(),
+        );
+        assert_eq!(detect_winning(&ctx).len(), 1);
+    }
+}
