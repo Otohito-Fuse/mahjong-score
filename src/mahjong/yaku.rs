@@ -71,12 +71,12 @@ fn blocks_to_is_open(blocks: &Vec<Block>) -> bool {
     for Block(bt, _) in blocks {
         match bt {
             BlockType::Chi | BlockType::Pon | BlockType::Minkan => {
-                return false;
+                return true;
             }
             _ => {}
         }
     }
-    true
+    false
 }
 
 fn blocks_to_pair_tile(blocks: &Vec<Block>) -> Option<Tile> {
