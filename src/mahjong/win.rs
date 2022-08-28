@@ -207,3 +207,39 @@ pub fn detect_winning(ctx: &HandContext) -> Vec<YakuContext> {
 
     output
 }
+
+// #[cfg(test)]
+// mod test {
+//     use super::*;
+
+//     #[test]
+//     fn test_detect_winning_01() {
+//         let ctx: HandContext = HandContext::new(
+//             vec![
+//                 TileWithDora(Tile(TM, 1), 0),
+//                 TileWithDora(Tile(TM, 2), 0),
+//                 TileWithDora(Tile(TM, 3), 0),
+//                 TileWithDora(Tile(TM, 5), 0),
+//                 TileWithDora(Tile(TM, 6), 0),
+//                 TileWithDora(Tile(TM, 7), 0),
+//                 TileWithDora(Tile(TM, 5), 0),
+//                 TileWithDora(Tile(TM, 6), 0),
+//                 TileWithDora(Tile(TM, 7), 0),
+//                 TileWithDora(Tile(TS, 6), 0),
+//                 TileWithDora(Tile(TS, 7), 0),
+//                 TileWithDora(Tile(TZ, WWE), 0),
+//                 TileWithDora(Tile(TZ, WWE), 0),
+//             ],
+//             vec![],
+//             TileWithDora(Tile(TS, 8), 0),
+//             false,
+//             WEA,
+//             WNO,
+//             vec![],
+//             vec![],
+//             vec![],
+//             YakuFlags::default(),
+//         );
+//         assert_eq!(detect_winning(&ctx).len(), 1);
+//     }
+// }

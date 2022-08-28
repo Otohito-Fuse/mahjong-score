@@ -81,7 +81,7 @@ pub fn get_mentsu(table: &NumCntTable) -> Option<Vec<Vec<Mentsu>>> {
                 }
             }
         }
-        if i < 8 && table[i] == 1 && table[i + 1] == 1 && table[i + 2] == 1 {
+        if i < 8 && table[i] >= 1 && table[i + 1] >= 1 && table[i + 2] >= 1 {
             let mut table = table.clone();
             table[i] -= 1;
             table[i + 1] -= 1;
@@ -131,4 +131,51 @@ pub fn get_koutsu(table: &NumCntTable) -> Option<Vec<Vec<Mentsu>>> {
     }
 
     Some(Vec::new())
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_get_mentsu_01() {
+        let table: NumCntTable = [0, 1, 1, 1, 0, 0, 0, 0, 0, 0];
+        assert_eq!(get_mentsu(&table).unwrap().len(), 1);
+    }
+
+    #[test]
+    fn test_get_mentsu_02() {
+        let table: NumCntTable = [0, 1, 1, 1, 0, 0, 0, 0, 0, 0];
+        assert_eq!(get_mentsu(&table).unwrap()[0].len(), 1);
+    }
+
+    #[test]
+    fn test_get_mentsu_03() {
+        let table: NumCntTable = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        assert_eq!(get_mentsu(&table).unwrap().len(), 1);
+    }
+
+    #[test]
+    fn test_get_mentsu_04() {
+        let table: NumCntTable = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        assert_eq!(get_mentsu(&table).unwrap()[0].len(), 0);
+    }
+
+    #[test]
+    fn test_get_mentsu_05() {
+        let table: NumCntTable = [0, 1, 1, 1, 0, 1, 1, 1, 0, 0];
+        assert_eq!(get_mentsu(&table).unwrap()[0].len(), 2);
+    }
+
+    #[test]
+    fn test_get_mentsu_06() {
+        let table: NumCntTable = [0, 1, 1, 1, 0, 1, 2, 2, 1, 0];
+        assert_eq!(get_mentsu(&table).unwrap()[0].len(), 3);
+    }
+
+    #[test]
+    fn test_get_mentsu_07() {
+        let table: NumCntTable = [0, 1, 1, 1, 0, 2, 2, 2, 0, 0];
+        assert_eq!(get_mentsu(&table).unwrap()[0].len(), 3);
+    }
 }
