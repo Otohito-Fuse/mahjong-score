@@ -245,4 +245,35 @@ mod test {
         );
         assert_eq!(detect_winning(&ctx).len(), 1);
     }
+
+    #[test]
+    fn detect_winning_works_02() {
+        let ctx: HandContext = HandContext::new(
+            vec![
+                TileWithDora(Tile(TM, 1), 0),
+                TileWithDora(Tile(TM, 2), 0),
+                TileWithDora(Tile(TM, 3), 0),
+                TileWithDora(Tile(TM, 1), 0),
+                TileWithDora(Tile(TM, 2), 0),
+                TileWithDora(Tile(TM, 3), 0),
+                TileWithDora(Tile(TM, 1), 0),
+                TileWithDora(Tile(TM, 2), 0),
+                TileWithDora(Tile(TM, 3), 0),
+                TileWithDora(Tile(TS, 6), 0),
+                TileWithDora(Tile(TS, 7), 0),
+                TileWithDora(Tile(TZ, WWE), 0),
+                TileWithDora(Tile(TZ, WWE), 0),
+            ],
+            vec![],
+            TileWithDora(Tile(TS, 8), 0),
+            false,
+            WEA,
+            WNO,
+            vec![],
+            vec![],
+            vec![],
+            YakuFlags::default(),
+        );
+        assert_eq!(detect_winning(&ctx).len(), 2);
+    }
 }
