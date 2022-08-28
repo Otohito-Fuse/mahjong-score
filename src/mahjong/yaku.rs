@@ -357,7 +357,7 @@ impl YakuContext {
 }
 
 pub struct Yaku {
-    pub id: usize,                      // 雀魂のID
+    pub id: usize,
     pub name: &'static str,             // 役名
     pub func: fn(&YakuContext) -> bool, // 役判定関数
     pub fan_close: usize,               // 鳴きなしの飜
@@ -383,59 +383,62 @@ macro_rules! yaku {
 }
 
 const YAKU_LIST: &[Yaku] = &[
-    yaku!(11, "場風 東", is_bakaze_e, 1, 1),
-    yaku!(11, "場風 南", is_bakaze_s, 1, 1),
-    yaku!(11, "場風 西", is_bakaze_w, 1, 1),
-    yaku!(11, "場風 北", is_bakaze_n, 1, 1),
+    yaku!(7, "役牌 白", is_haku, 1, 1),
+    yaku!(8, "役牌 發", is_hatsu, 1, 1),
+    yaku!(9, "役牌 中", is_chun, 1, 1),
     yaku!(10, "自風 東", is_jikaze_e, 1, 1),
     yaku!(10, "自風 南", is_jikaze_s, 1, 1),
     yaku!(10, "自風 西", is_jikaze_w, 1, 1),
     yaku!(10, "自風 北", is_jikaze_n, 1, 1),
-    yaku!(7, "役牌 白", is_haku, 1, 1),
-    yaku!(8, "役牌 發", is_hatsu, 1, 1),
-    yaku!(9, "役牌 中", is_chun, 1, 1),
+    yaku!(11, "場風 東", is_bakaze_e, 1, 1),
+    yaku!(11, "場風 南", is_bakaze_s, 1, 1),
+    yaku!(11, "場風 西", is_bakaze_w, 1, 1),
+    yaku!(11, "場風 北", is_bakaze_n, 1, 1),
     yaku!(12, "断幺九", is_tanyaochuu, 1, 1),
-    yaku!(14, "平和", is_pinfu, 1, 0),
     yaku!(13, "一盃口", is_iipeikou, 1, 0),
-    yaku!(28, "二盃口", is_ryanpeikou, 3, 0),
+    yaku!(14, "平和", is_pinfu, 1, 0),
+    yaku!(15, "混全帯幺九", is_chanta, 2, 1),
     yaku!(16, "一気通貫", is_ikkitsuukan, 2, 1),
     yaku!(17, "三色同順", is_sanshokudoujun, 2, 1),
     yaku!(19, "三色同刻", is_sanshokudoukou, 2, 2),
-    yaku!(15, "混全帯幺九", is_chanta, 2, 1),
-    yaku!(26, "純全帯幺九", is_junchan, 3, 2),
-    yaku!(24, "混老頭", is_honroutou, 2, 2),
-    yaku!(41, "清老頭", is_chinroutou, 13, 13),
+    yaku!(20, "三槓子", is_sankantsu, 2, 2),
     yaku!(21, "対々和", is_toitoihou, 2, 2),
     yaku!(22, "三暗刻", is_sanankou, 2, 2),
-    yaku!(38, "四暗刻", is_suuankou, 13, 0),
-    yaku!(48, "四暗刻単騎", is_suuankoutanki, 14, 0),
-    yaku!(20, "三槓子", is_sankantsu, 2, 2),
-    yaku!(44, "四槓子", is_suukantsu, 13, 13),
-    yaku!(27, "混一色", is_honitsu, 3, 2),
-    yaku!(29, "清一色", is_chinitsu, 6, 5),
     yaku!(23, "小三元", is_shousangen, 2, 2),
+    yaku!(24, "混老頭", is_honroutou, 2, 2),
+    yaku!(26, "純全帯幺九", is_junchan, 3, 2),
+    yaku!(27, "混一色", is_honitsu, 3, 2),
+    yaku!(28, "二盃口", is_ryanpeikou, 3, 0),
+    yaku!(29, "清一色", is_chinitsu, 6, 5),
     yaku!(37, "大三元", is_daisangen, 13, 13),
-    yaku!(43, "小四喜", is_shousuushii, 13, 13),
-    yaku!(50, "大四喜", is_daisuushii, 14, 14),
-    yaku!(40, "緑一色", is_ryuuiisou, 13, 13),
+    yaku!(38, "四暗刻", is_suuankou, 13, 0),
     yaku!(39, "字一色", is_tsuuiisou, 13, 13),
+    yaku!(40, "緑一色", is_ryuuiisou, 13, 13),
+    yaku!(41, "清老頭", is_chinroutou, 13, 13),
+    yaku!(43, "小四喜", is_shousuushii, 13, 13),
+    yaku!(44, "四槓子", is_suukantsu, 13, 13),
     yaku!(45, "九蓮宝燈", is_chuurenpoutou, 13, 0),
     yaku!(47, "純正九蓮宝燈", is_junseichuurenpoutou, 14, 0),
+    yaku!(48, "四暗刻単騎", is_suuankoutanki, 14, 0),
+    yaku!(50, "大四喜", is_daisuushii, 14, 14),
     // 特殊な組み合わせ
+    yaku!(25, "七対子", is_sevenpair, 2, 0),
     yaku!(42, "国士無双", is_kokushimusou, 13, 0),
     yaku!(49, "国士無双十三面", is_kokushimusoujuusanmenmachi, 14, 0),
-    yaku!(25, "七対子", is_sevenpair, 2, 0),
     // 特殊条件
     yaku!(1, "門前清自摸和", is_menzentsumo, 1, 0),
     yaku!(2, "立直", is_riichi, 1, 0),
-    yaku!(18, "両立直", is_doubleriichi, 2, 0),
-    yaku!(30, "一発", is_ippatsu, 1, 0),
+    yaku!(3, "槍槓", is_chankan, 1, 1),
+    yaku!(4, "嶺上開花", is_rinshankaihou, 1, 1),
     yaku!(5, "海底摸月", is_haiteiraoyue, 1, 1),
     yaku!(6, "河底撈魚", is_houteiraoyui, 1, 1),
-    yaku!(4, "嶺上開花", is_rinshankaihou, 1, 1),
-    yaku!(3, "槍槓", is_chankan, 1, 1),
+    yaku!(18, "ダブル立直", is_doubleriichi, 2, 0),
+    yaku!(30, "一発", is_ippatsu, 1, 0),
     yaku!(35, "天和", is_tenhou, 13, 13),
     yaku!(36, "地和", is_tiihou, 13, 13),
+    // ローカル役
+    yaku!(51, "十二落抬", is_shiiaruraotai, 1, 1),
+    yaku!(52, "五門斉", is_uumenchii, 2, 2),
 ];
 
 // 場風
@@ -1207,4 +1210,74 @@ fn is_tenhou(ctx: &YakuContext) -> bool {
 // 地和
 fn is_tiihou(ctx: &YakuContext) -> bool {
     ctx.yaku_flags.tiihou
+}
+
+// 十二落抬
+fn is_shiiaruraotai(ctx: &YakuContext) -> bool {
+    match &ctx.form {
+        YakuForm::FiveBlock(b) => {
+            for Block(bt, _) in &b.blocks {
+                match bt {
+                    BlockType::Shuntsu => {
+                        return false;
+                    }
+                    BlockType::Koutsu => {
+                        return false;
+                    }
+                    _ => {}
+                }
+            }
+            return true;
+        }
+        _ => false,
+    }
+}
+
+// 五門斉
+fn is_uumenchii(ctx: &YakuContext) -> bool {
+    match &ctx.form {
+        YakuForm::FiveBlock(b) => {
+            let mut has_manzu = false;
+            let mut has_pinzu = false;
+            let mut has_souzu = false;
+            let mut has_wind = false;
+            let mut has_dragon = false;
+            for Block(_, t) in &b.blocks {
+                if t.0 == TM {
+                    has_manzu = true;
+                } else if t.0 == TP {
+                    has_pinzu = true;
+                } else if t.0 == TS {
+                    has_souzu = true;
+                } else if t.is_wind() {
+                    has_wind = true;
+                } else if t.is_dragon() {
+                    has_dragon = true;
+                }
+            }
+            has_manzu && has_pinzu && has_souzu && has_wind && has_dragon
+        }
+        YakuForm::SevenPair(s) => {
+            let mut has_manzu = false;
+            let mut has_pinzu = false;
+            let mut has_souzu = false;
+            let mut has_wind = false;
+            let mut has_dragon = false;
+            for t in &s.pairs {
+                if t.0 == TM {
+                    has_manzu = true;
+                } else if t.0 == TP {
+                    has_pinzu = true;
+                } else if t.0 == TS {
+                    has_souzu = true;
+                } else if t.is_wind() {
+                    has_wind = true;
+                } else if t.is_dragon() {
+                    has_dragon = true;
+                }
+            }
+            has_manzu && has_pinzu && has_souzu && has_wind && has_dragon
+        }
+        _ => false,
+    }
 }
