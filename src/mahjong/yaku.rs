@@ -235,7 +235,7 @@ impl YakuContext {
     // (役一覧, 飜数, 役満倍数)を返却. 役満ではない場合,役満倍率は0, 役一覧に鳴き0飜とドラは含まない
     pub fn calc_yaku(
         &self,
-        yaku_enable_map: HashMap<usize, bool>,
+        yaku_enable_map: &HashMap<usize, bool>,
     ) -> (Vec<&'static Yaku>, usize, usize) {
         let mut yaku = vec![];
         for y in YAKU_LIST {
