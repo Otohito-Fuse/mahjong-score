@@ -1,4 +1,5 @@
 use super::*;
+use std::collections::HashMap;
 
 #[derive(Debug)]
 pub struct FiveBlock {
@@ -232,10 +233,13 @@ impl YakuContext {
     }
 
     // (役一覧, 飜数, 役満倍数)を返却. 役満ではない場合,役満倍率は0, 役一覧に鳴き0飜とドラは含まない
-    pub fn calc_yaku(&self) -> (Vec<&'static Yaku>, usize, usize) {
+    pub fn calc_yaku(
+        &self,
+        yaku_enable_map: HashMap<usize, bool>,
+    ) -> (Vec<&'static Yaku>, usize, usize) {
         let mut yaku = vec![];
         for y in YAKU_LIST {
-            if (y.func)(self) {
+            if *yaku_enable_map.get(&y.id).unwrap_or(&true) && (y.func)(self) {
                 yaku.push(y)
             }
         }
