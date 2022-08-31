@@ -443,6 +443,11 @@ const YAKU_LIST: &[Yaku] = &[
     // ローカル役
     yaku!(51, "十二落抬", is_shiiaruraotai, 1, 1),
     yaku!(52, "五門斉", is_uumenchii, 2, 2),
+    yaku!(53, "三連刻", is_sanrenkou, 2, 2),
+    yaku!(54, "一色三順", is_isshokusanjun, 3, 2),
+    yaku!(55, "大車輪", is_daisharin, 13, 0),
+    yaku!(56, "大竹林", is_daichikurin, 3, 2),
+    yaku!(57, "大数隣", is_daisuurin, 3, 2),
 ];
 
 // 場風
@@ -1222,10 +1227,7 @@ fn is_shiiaruraotai(ctx: &YakuContext) -> bool {
         YakuForm::FiveBlock(b) => {
             for Block(bt, _) in &b.blocks {
                 match bt {
-                    BlockType::Shuntsu => {
-                        return false;
-                    }
-                    BlockType::Koutsu => {
+                    BlockType::Shuntsu | BlockType::Koutsu => {
                         return false;
                     }
                     _ => {}
@@ -1281,6 +1283,125 @@ fn is_uumenchii(ctx: &YakuContext) -> bool {
                 }
             }
             has_manzu && has_pinzu && has_souzu && has_wind && has_dragon
+        }
+        _ => false,
+    }
+}
+
+// 三連刻
+fn is_sanrenkou(ctx: &YakuContext) -> bool {
+    match &ctx.form {
+        YakuForm::FiveBlock(b) => {
+            let mut koutsu_table: [[usize; 10]; 3] = [[0; 10]; 3];
+            for Block(bt, t) in &b.blocks {
+                match bt {
+                    BlockType::Koutsu | BlockType::Pon | BlockType::Ankan | BlockType::Minkan => {
+                        if t.0 < TZ {
+                            koutsu_table[t.0][t.1] += 1;
+                        }
+                    }
+                    _ => {}
+                }
+            }
+            for i in 0..3 {
+                for j in 1..=7 {
+                    if koutsu_table[i][j] >= 1
+                        && koutsu_table[i][j + 1] >= 1
+                        && koutsu_table[i][j + 2] >= 1
+                    {
+                        return true;
+                    }
+                }
+            }
+            false
+        }
+        _ => false,
+    }
+}
+
+// 一色三順
+fn is_isshokusanjun(ctx: &YakuContext) -> bool {
+    match &ctx.form {
+        YakuForm::FiveBlock(b) => {
+            let mut shuntsu_table: [[usize; 10]; 3] = [[0; 10]; 3];
+            for Block(bt, t) in &b.blocks {
+                match bt {
+                    BlockType::Shuntsu | BlockType::Chi => {
+                        if t.0 < TZ {
+                            shuntsu_table[t.0][t.1] += 1;
+                        }
+                    }
+                    _ => {}
+                }
+            }
+            for i in 0..3 {
+                for j in 1..=7 {
+                    if shuntsu_table[i][j] >= 3 {
+                        return true;
+                    }
+                }
+            }
+            false
+        }
+        _ => false,
+    }
+}
+
+// 大車輪
+fn is_daisharin(ctx: &YakuContext) -> bool {
+    match &ctx.form {
+        YakuForm::SevenPair(s) => {
+            if s.pairs.contains(&Tile(TP, 2))
+                && s.pairs.contains(&Tile(TP, 3))
+                && s.pairs.contains(&Tile(TP, 4))
+                && s.pairs.contains(&Tile(TP, 5))
+                && s.pairs.contains(&Tile(TP, 6))
+                && s.pairs.contains(&Tile(TP, 7))
+                && s.pairs.contains(&Tile(TP, 8))
+            {
+                return true;
+            }
+            false
+        }
+        _ => false,
+    }
+}
+
+// 大竹林
+fn is_daichikurin(ctx: &YakuContext) -> bool {
+    match &ctx.form {
+        YakuForm::SevenPair(s) => {
+            if s.pairs.contains(&Tile(TS, 2))
+                && s.pairs.contains(&Tile(TS, 3))
+                && s.pairs.contains(&Tile(TS, 4))
+                && s.pairs.contains(&Tile(TS, 5))
+                && s.pairs.contains(&Tile(TS, 6))
+                && s.pairs.contains(&Tile(TS, 7))
+                && s.pairs.contains(&Tile(TS, 8))
+            {
+                return true;
+            }
+            false
+        }
+        _ => false,
+    }
+}
+
+// 大数隣
+fn is_daisuurin(ctx: &YakuContext) -> bool {
+    match &ctx.form {
+        YakuForm::SevenPair(s) => {
+            if s.pairs.contains(&Tile(TM, 2))
+                && s.pairs.contains(&Tile(TM, 3))
+                && s.pairs.contains(&Tile(TM, 4))
+                && s.pairs.contains(&Tile(TM, 5))
+                && s.pairs.contains(&Tile(TM, 6))
+                && s.pairs.contains(&Tile(TM, 7))
+                && s.pairs.contains(&Tile(TM, 8))
+            {
+                return true;
+            }
+            false
         }
         _ => false,
     }
