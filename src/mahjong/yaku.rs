@@ -446,8 +446,9 @@ const YAKU_LIST: &[Yaku] = &[
     yaku!(53, "三連刻", is_sanrenkou, 2, 2),
     yaku!(54, "一色三順", is_isshokusanjun, 3, 2),
     yaku!(55, "大車輪", is_daisharin, 13, 0),
-    yaku!(56, "大竹林", is_daichikurin, 3, 2),
-    yaku!(57, "大数隣", is_daisuurin, 3, 2),
+    yaku!(56, "大竹林", is_daichikurin, 13, 0),
+    yaku!(57, "大数隣", is_daisuurin, 13, 0),
+    yaku!(58, "大七星", is_daichiishin, 14, 0),
 ];
 
 // 場風
@@ -1398,6 +1399,26 @@ fn is_daisuurin(ctx: &YakuContext) -> bool {
                 && s.pairs.contains(&Tile(TM, 6))
                 && s.pairs.contains(&Tile(TM, 7))
                 && s.pairs.contains(&Tile(TM, 8))
+            {
+                return true;
+            }
+            false
+        }
+        _ => false,
+    }
+}
+
+// 大七星
+fn is_daichiishin(ctx: &YakuContext) -> bool {
+    match &ctx.form {
+        YakuForm::SevenPair(s) => {
+            if s.pairs.contains(&Tile(TZ, WEA))
+                && s.pairs.contains(&Tile(TZ, WSO))
+                && s.pairs.contains(&Tile(TZ, WWE))
+                && s.pairs.contains(&Tile(TZ, WNO))
+                && s.pairs.contains(&Tile(TZ, DWH))
+                && s.pairs.contains(&Tile(TZ, DGR))
+                && s.pairs.contains(&Tile(TZ, DRE))
             {
                 return true;
             }
