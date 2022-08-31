@@ -7,6 +7,7 @@ pub type Index = usize; // その他Index
 
 pub type Score = i32; // プレイヤーの持ち点
 pub type Point = i32; // 打点
+pub type Points = (Point, Point, Point); // (ロンの支払い, ツモ・子の支払い, ツモ・親の支払い)
 
 // Number
 pub const SEAT: usize = 4; // 座席の数
