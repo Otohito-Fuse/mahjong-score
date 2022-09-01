@@ -121,12 +121,12 @@ pub fn get_points(is_dealer: bool, fu: usize, fan: usize, yakuman_count: usize) 
 }
 
 pub fn get_score_title(fu: usize, fan: usize, yakuman_count: usize) -> String {
-    let fu_index = calc_fu_index(fu);
     match yakuman_count {
         0 => {
             if fan >= 13 {
                 "数え役満"
             } else {
+                let fu_index = calc_fu_index(fu);
                 match POINT_NON_DEALER[fan][fu_index] {
                     8000 => "満貫",
                     12000 => "跳満",
