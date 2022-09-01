@@ -358,6 +358,13 @@ impl YakuContext {
             _ => 0,
         }
     }
+
+    pub fn is_open(&self) -> bool {
+        match &self.form {
+            YakuForm::FiveBlock(fb) => fb.is_open(),
+            _ => false,
+        }
+    }
 }
 
 pub struct Yaku {
