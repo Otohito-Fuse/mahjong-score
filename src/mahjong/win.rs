@@ -33,7 +33,7 @@ pub fn detect_winning(ctx: &HandContext) -> Vec<YakuContext> {
                 if n == 2 {
                     pairs.push(Tile(i, j));
                 }
-                if n != 0 {
+                if (j != 1 && j != 9 && n != 0) || ((j == 1 || j == 9) && (n == 0 || n >= 3)) {
                     kokushi_flg = false;
                 }
             }
